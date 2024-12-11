@@ -6,10 +6,16 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import questions from "../questions";
 import Card from "../components/Card";
 import CustomButton from "../components/CustomButton";
-
-const question = questions[0];
+import { useState } from "react";
 
 export default function QuizScreen() {
+  const [questionIndex, setQuestionIndex] = useState(0)
+  const question = questions[questionIndex];
+
+  const onNext = () => {
+    setQuestionIndex(questionIndex+1)
+  }
+
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
@@ -34,7 +40,7 @@ export default function QuizScreen() {
         {/* Footer */}
         <CustomButton
           title="Next"
-          onPress={()=>console.warn("Custom button pressed")}
+          onPress={onNext}
           onLongPress={() => console.warn("Custom button long pressed")}
           rightIcon={
             <FontAwesome6 name="arrow-right-long" size={16} color="white" />
