@@ -2,16 +2,16 @@ import { Text, View, StyleSheet } from "react-native";
 import { PropsWithChildren } from "react";
 
 type Card = {
-    title: string;
-}
+  title: string;
+};
 
-export default function Card({title,children}:PropsWithChildren<Card>) {
-    return (
-        <View style={styles.container}>
-            <Text style={styles.title}>{title}</Text>
-            {children}
-            </View>
-    )
+export default function Card({ title, children }: PropsWithChildren<Card>) {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>{title}</Text>
+      {children}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
