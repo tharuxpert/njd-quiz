@@ -9,12 +9,6 @@ type QuestionCard = {
 };
 
 function QuestionCard({ question }: QuestionCard) {
-  const [selectedOption, setSelectedOption] = useState<string | undefined>();
-
-  const onOptionSelected = (option: string) => {
-    setSelectedOption(option);
-  };
-
   return (
       <Card title={question.title}>
 
@@ -23,8 +17,6 @@ function QuestionCard({ question }: QuestionCard) {
           <AnswerOption
             key={option}
             option={option}
-            isSelected={option === selectedOption}
-            onPress={() => onOptionSelected(option)}
           />
         ))}
         </View>

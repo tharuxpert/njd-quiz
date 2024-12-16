@@ -1,39 +1,57 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import QuestionCard from "../components/QuestionCard";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome6 } from "@expo/vector-icons";
-
-import questions from "../questions";
 import Card from "../components/Card";
 import CustomButton from "../components/CustomButton";
-import { useState } from "react";
+import { useQuizContext } from "../providers/QuizProvider";
+import { useEffect, useState } from "react";
 
 export default function QuizScreen() {
-  const [questionIndex, setQuestionIndex] = useState(0)
-  const question = questions[questionIndex];
+  const { question, questionIndex, onNext, score, totalQuestions, bestScore } =
+    useQuizContext();
+  const [time, setTime] = useState(20);
 
-  const onNext = () => {
-    setQuestionIndex(questionIndex+1)
-  }
+  useEffect(() => {
+    // start count down
+    setTime(20);
+    const interval = setInterval(() => {
+      setTime((t) => t - 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [question]);
+
+  useEffect(() => {
+    if (time <= 0 && question) {
+     onNext();
+   }
+  },[time])
 
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
         {/* Header */}
         <View>
-          <Text style={styles.title}>Question 1/5</Text>
+          <Text style={styles.title}>
+            Question {questionIndex + 1}/{totalQuestions}
+          </Text>
         </View>
 
         {/* Body */}
         {question ? (
           <View>
             <QuestionCard question={question} />
-            <Text style={styles.time}>20 sec</Text>
+            <Text style={styles.time}>{time} sec</Text>
           </View>
         ) : (
           <Card title="Well done">
-            <Text>Correct answers: 3/5</Text>
-            <Text>Best score: 10</Text>
+            <Text>
+              Correct answers: {score}/{totalQuestions}
+            </Text>
+            <Text>Best score: {bestScore}</Text>
           </Card>
         )}
 
