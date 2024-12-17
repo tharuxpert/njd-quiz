@@ -5,39 +5,40 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import Card from "../components/Card";
 import CustomButton from "../components/CustomButton";
 import { useQuizContext } from "../providers/QuizProvider";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { useTimer } from "../hooks/useTimer";
+import LottieView from "lottie-react-native";
+import party from "../../assets/party.json";
 
 export default function QuizScreen() {
   const { question, questionIndex, onNext, score, totalQuestions, bestScore } =
     useQuizContext();
-  const [time, setTime] = useState(20);
+  const { time, startTimer, stopTimer } = useTimer(20);
 
   useEffect(() => {
-    // start count down
-    setTime(20);
-    const interval = setInterval(() => {
-      setTime((t) => t - 1);
-    }, 1000);
+    startTimer();
 
     return () => {
-      clearInterval(interval);
+      stopTimer();
     };
   }, [question]);
 
   useEffect(() => {
     if (time <= 0 && question) {
-     onNext();
-   }
-  },[time])
+      onNext();
+    }
+  }, [time]);
 
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
         {/* Header */}
         <View>
-          <Text style={styles.title}>
-            Question {questionIndex + 1}/{totalQuestions}
-          </Text>
+          {question && (
+            <Text style={styles.title}>
+              Question {questionIndex + 1}/{totalQuestions}
+            </Text>
+          )}
         </View>
 
         {/* Body */}
@@ -47,12 +48,19 @@ export default function QuizScreen() {
             <Text style={styles.time}>{time} sec</Text>
           </View>
         ) : (
-          <Card title="Well done">
-            <Text>
-              Correct answers: {score}/{totalQuestions}
-            </Text>
-            <Text>Best score: {bestScore}</Text>
-          </Card>
+          <>
+            <LottieView
+              autoPlay
+                style={StyleSheet.absoluteFill}
+              source={require("../../assets/party.json")}
+            />
+            <Card title="Well done">
+              <Text>
+                Correct answers: {score}/{totalQuestions}
+              </Text>
+              <Text>Best score: {bestScore}</Text>
+            </Card>
+          </>
         )}
 
         {/* Footer */}
